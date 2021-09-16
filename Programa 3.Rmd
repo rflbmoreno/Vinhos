@@ -1,4 +1,3 @@
-```{r}
 #Instalação de pacotes
 
 pacotes <- c("plotly","tidyverse","knitr","kableExtra","fastDummies","rgl","car",
@@ -14,29 +13,25 @@ if(sum(as.numeric(!pacotes %in% installed.packages())) != 0){
 } else {
   sapply(pacotes, require, character = T) 
 }
-```
-```{r}
+
 #Carregamento de dados
 
 dados <- read.csv(file.choose())
 dados
-```
-```{r}
+
 #Tratamento prévio de dados
 
 dados[!complete.cases(dados),]
 dados$quality <- as.factor(dados$quality)
 summary(dados)
-```
-```{r}
+
 #Criação de modelo de regressão logística multinomial
 
 modelo <- multinom(formula = quality ~ .,
                    data = dados)
 
 summary(modelo)
-```
-```{r}
+
 #Verificação do Teste de Qui-Quadrado para o modelo: hipotese nula rejeitada
 
 qui_quadrado <- function(x) {
@@ -50,14 +45,12 @@ qui_quadrado <- function(x) {
 }
 
 qui_quadrado(modelo)
-```
-```{r}
+
 #Verificação dos parâmetros no Teste de Z-Wald
 
 zwald <- summary(modelo)$coefficients/summary(modelo)$standard.errors
 round((pnorm(abs(zwald), lower.tail = F) * 2), 4)
-```
-```{r}
+
 #Predição das observações pelo modelo
 
 predicao <- predict(modelo,
@@ -66,29 +59,11 @@ predicao <- predict(modelo,
 
 dados <- cbind(dados, predicao)
 dados
-```
-```{r}
+
 #Acurácia do modelo
 
 acuracia <- sum(diag(table(dados$quality, dados$predicao)))/sum(table(dados$quality, dados$predicao))
-acuracia
-```
-```{r}
-options(scipen = 999)
 
-#prob <- c()
-#
-#for(i in 1:dim(modelo$fitted.values)[1]){
-#  prob[i] <- max(modelo$fitted.values[i, ])
-#}
-
-#dados <- cbind(dados, prob)
-#dados
-
-dados <- cbind(dados, modelo$fitted.values)
-dados
-```
-```{r}
 #Predição de alguns exemplos
 
 predict(modelo,
@@ -118,6 +93,7 @@ predict(modelo,
                    sulphates = 0.54,
                    alcohol = 9.5),
         type = "prob")
-```
+
+#Fim
 
 
